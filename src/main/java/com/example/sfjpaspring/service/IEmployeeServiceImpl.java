@@ -12,20 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IEmployeeServiceImpl implements IEmployeeService {
 
-//    @Autowired
-//    private SpringDataJpaEmployeeRepository employeeRepository;
-
     @Autowired
-    private JpaEmployeeRepository employeeRepository;
+    private SpringDataJpaEmployeeRepository employeeRepository;
+
+//    @Autowired
+//    private JpaEmployeeRepository employeeRepository;
 
     @Override
-    @Transactional
     public List<Employee> findAll() {
         return employeeRepository.findAll();
     }
 
     @Override
-    @Transactional
     public Employee findById(int id) {
         return employeeRepository.findById(id).isPresent() ? employeeRepository.findById(id).get() : null;
     }
