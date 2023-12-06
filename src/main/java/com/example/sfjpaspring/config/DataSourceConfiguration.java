@@ -26,8 +26,7 @@ public class DataSourceConfiguration {
 
     @Primary
     @Bean(name = "entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean
-    entityManagerFactory(
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,
             DataSource dataSource
     ) {
