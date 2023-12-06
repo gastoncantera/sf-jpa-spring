@@ -1,6 +1,7 @@
 package com.example.sfjpaspring.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -28,8 +29,8 @@ public class JpaEmployeeRepository {
         return readOnlyEntityManager.createQuery("from Employee").getResultList();
     }
 
-    public Employee findById(int id) {
-        return readOnlyEntityManager.find(Employee.class, id);
+    public Optional<Employee> findById(int id) {
+        return Optional.ofNullable(readOnlyEntityManager.find(Employee.class, id));
     }
 
     public Employee save(Employee employee) {

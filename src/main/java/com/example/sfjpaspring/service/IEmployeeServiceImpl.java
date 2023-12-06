@@ -27,10 +27,7 @@ public class IEmployeeServiceImpl implements IEmployeeService {
     @Override
     @Transactional
     public Employee findById(int id) {
-        return this.findAll()
-                .stream()
-                .filter(e -> e.getId() == id)
-                .findFirst().orElse(null);
+        return employeeRepository.findById(id).isPresent() ? employeeRepository.findById(id).get() : null;
     }
 
     @Override
