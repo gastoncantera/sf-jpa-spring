@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface SpringDataJpaEmployeeRepository extends JpaRepository<Employee, Integer> {
     @Override
-    @Transactional("readOnlyTransactionManager")
+    @Transactional(readOnly = true)
     List<Employee> findAll();
 
     @Override
-    @Transactional("readOnlyTransactionManager")
+    @Transactional(readOnly = true)
     Optional<Employee> findById(Integer id);
 }
