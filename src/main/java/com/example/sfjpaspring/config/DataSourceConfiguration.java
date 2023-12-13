@@ -10,7 +10,6 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class DataSourceConfiguration {
@@ -33,27 +32,26 @@ public class DataSourceConfiguration {
             @Qualifier("dataSource") DataSource dataSource,
             @Qualifier("replicaDataSource") DataSource replicaDataSource
     ) {
-        TransactionRoutingDataSource routingDataSource = new TransactionRoutingDataSource();
-        Map<Object, Object> properties = new HashMap<>();
-
-        properties.put(DataSourceType.READ_WRITE, dataSource);
-        properties.put(DataSourceType.READ_ONLY, replicaDataSource);
-        routingDataSource.setTargetDataSources(properties);
-        routingDataSource.setDefaultTargetDataSource(dataSource);
-
-        return routingDataSource;
+        return new TransactionRoutingDataSource(dataSource, replicaDataSource);
     }
 
 }
 
 class TransactionRoutingDataSource extends AbstractRoutingDataSource {
+    public TransactionRoutingDataSource(DataSource mainDataSource, DataSource replicaDataSource) {
+        this.setTargetDataSources(new HashMap<Object, Object>() {{
+            put(DataSourceType.READ_WRITE, mainDataSource);
+            put(DataSourceType.READ_ONLY, replicaDataSource);
+        }});
+        this.setDefaultTargetDataSource(mainDataSource);
+    }
 
     @Override
     protected Object determineCurrentLookupKey() {
         return TransactionSynchronizationManager
-                .isCurrentTransactionReadOnly() ?
-                DataSourceType.READ_ONLY :
-                DataSourceType.READ_WRITE;
+                .isCurrentTransactionReadOnly()
+                ? DataSourceType.READ_ONLY
+                : DataSourceType.READ_WRITE;
     }
 }
 
